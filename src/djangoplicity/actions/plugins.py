@@ -44,6 +44,7 @@ class ActionPlugin( Task ):
 	init constructor.
 	
 	Example of bare minium plugin::
+	
 		class SimpleAction( ActionPlugin ):
 			action_name = 'Simple action'
 		
@@ -99,16 +100,21 @@ class ActionPlugin( Task ):
 		
 		Custom processing of the input parameters can be done via the get_arguments_method.
 		"""
-		conf, args, kwargs = cls.get_arguments( conf, *args, **kwargs )
+		args, kwargs = cls.get_arguments( *args, **kwargs )
 		cls.delay( conf, *args, **kwargs )
 	
 	@classmethod
-	def get_arguments( cls, conf, *args, **kwargs ):
+	def get_arguments( cls, *args, **kwargs ):
 		"""
 		Custom processing of input parameters (e.g. convert objects to primary keys.)
 		"""
-		return ( conf, args, kwargs )
+		return ( args, kwargs )
 	
 	@classmethod
 	def get_class_path( cls ):
 		return "%s.%s" % ( cls.__module__, cls.__name__ )
+	
+	@classmethod
+	def register( cls ):
+		from djangoplicity.actions.models import Action
+		Action.register_plugin( cls )

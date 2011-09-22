@@ -109,7 +109,7 @@ class Action( models.Model ):
 		if instance and not raw:
 			known_params = dict( [( p.name, p ) for p in ActionParameter.objects.filter( action=instance )] )
 
-			for p, desc, t in instance.get_plugincls().parameters:
+			for p, desc, t in instance.get_plugincls().action_parameters:
 				touched = False
 				try:
 					param = ActionParameter.objects.get( action=instance, name=p )
@@ -139,7 +139,6 @@ class Action( models.Model ):
 
 	class Meta:
 		ordering = ['name']
-		unique_together = ['plugin', 'name']
 
 
 class ActionParameter( models.Model ):
