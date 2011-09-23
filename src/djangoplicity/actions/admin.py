@@ -55,6 +55,10 @@ class ActionLogAdmin( admin.ModelAdmin ):
 	readonly_fields = [ 'timestamp', 'name', 'plugin', 'parameters', 'success', 'error', 'args', 'kwargs' ]
 	
 	def has_add_permission( self, request ):
+		"""
+		ActionLog should only be browsed, hence we prevent all users from adding new
+		entries.
+		"""
 		return False
 
 	
