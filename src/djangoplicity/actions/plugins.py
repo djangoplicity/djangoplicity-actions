@@ -77,7 +77,7 @@ class ActionPlugin( Task ):
 			parameters = ';'.join( [ "%s = %s" % ( unicode( k ), unicode( v ) ) for k, v in args[0].items() ] ),
 			args = '; '.join( [unicode( x ) for x in args[1:]] ),
 			kwargs = ';'.join( [ "%s = %s" % ( unicode( k ), unicode( v ) ) for k, v in kwargs.items() ] ),
-			error = traceback.format_tb( einfo.traceback ),
+			error = einfo.traceback,
 		).save()
 				
 	

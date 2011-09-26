@@ -1,0 +1,3 @@
+
+syntax: regexp
+^src/djangoplicity_actions\.egg-info$
