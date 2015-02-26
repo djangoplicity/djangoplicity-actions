@@ -249,7 +249,7 @@ class EventAction( models.Model ):
 		"""
 		logger.debug( "generating action cache" )
 		action_cache = {}
-		for a in cls.objects.all().select_related( depth=1 ).order_by( 'model_object', 'on_event', 'action' ):
+		for a in cls.objects.all().select_related('action').order_by( 'model_object', 'on_event', 'action' ):
 			g_pk = str( a.model_object.pk )
 			# by group_pk, event
 			if g_pk not in action_cache:
