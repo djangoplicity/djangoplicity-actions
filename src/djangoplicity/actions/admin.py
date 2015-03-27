@@ -14,7 +14,7 @@
 #      notice, this list of conditions and the following disclaimer in the
 #      documentation and/or other materials provided with the distribution.
 #
-#    * Neither the name of the European Southern Observatory nor the names 
+#    * Neither the name of the European Southern Observatory nor the names
 #      of its contributors may be used to endorse or promote products derived
 #      from this software without specific prior written permission.
 #
@@ -31,8 +31,8 @@
 #
 
 from django.contrib import admin
-from django.utils.translation import ugettext as _
 from djangoplicity.actions.models import Action, ActionParameter, ActionLog
+
 
 class ActionParameterInlineAdmin( admin.TabularInline ):
 	model = ActionParameter
@@ -41,19 +41,21 @@ class ActionParameterInlineAdmin( admin.TabularInline ):
 	readonly_fields = ['type', 'help_text', 'name']
 	can_delete = False
 	fields = ['name', 'value', 'type', 'help_text', ]
-	
+
+
 class ActionAdmin( admin.ModelAdmin ):
 	list_display = [ 'name', 'plugin' ]
 	list_filter = ['plugin']
 	search_fields = [ 'name', 'plugin', ]
 	inlines = [ ActionParameterInlineAdmin ]
-	
+
+
 class ActionLogAdmin( admin.ModelAdmin ):
 	list_display = [ 'timestamp', 'name', 'plugin', 'parameters', 'success', ]
 	list_filter = ['plugin', 'success', 'timestamp']
 	search_fields = [ 'name', 'plugin', 'error', 'parameters', 'args', 'kwargs' ]
 	readonly_fields = [ 'timestamp', 'name', 'plugin', 'parameters', 'success', 'error', 'args', 'kwargs' ]
-	
+
 	def has_add_permission( self, request ):
 		"""
 		ActionLog should only be browsed, hence we prevent all users from adding new
@@ -61,10 +63,10 @@ class ActionLogAdmin( admin.ModelAdmin ):
 		"""
 		return False
 
-	
+
 def register_with_admin( admin_site ):
 	admin_site.register( Action, ActionAdmin )
 	admin_site.register( ActionLog, ActionLogAdmin )
-		
-# Register with default admin site	
+
+# Register with default admin site
 register_with_admin( admin.site )

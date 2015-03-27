@@ -14,7 +14,7 @@
 #      notice, this list of conditions and the following disclaimer in the
 #      documentation and/or other materials provided with the distribution.
 #
-#    * Neither the name of the European Southern Observatory nor the names 
+#    * Neither the name of the European Southern Observatory nor the names
 #      of its contributors may be used to endorse or promote products derived
 #      from this software without specific prior written permission.
 #
@@ -32,17 +32,17 @@
 
 """
 Djangoplicity Actions is an application for user defined actions. An action is essentially
-a celery task (hence it will be run asynchronously), which as input is sent user editable 
-configuration as well as other parameters.  
+a celery task (hence it will be run asynchronously), which as input is sent user editable
+configuration as well as other parameters.
 
-The actions is meant to be integrated with other applications which can launch the actions 
+The actions is meant to be integrated with other applications which can launch the actions
 however they like (e.g. via signals, or direct user input). For instance djangoplicity-contacts
 allow a user to define an action to be run when a contact is added/removed from a group (e.g subscribe
 the user to mailman list).
 
 Executions of actions are logged in an action log, so they can be inspected.
 
-Installation 
+Installation
 ------------
 Put ``djangoplicity.actions'' in ``INSTALLED_APPS'' in your projects settings.py.
 
@@ -51,7 +51,7 @@ are not using the default admin site::
 
     from djangplicity.actions.admin import register_with_admin
     register_with_admin( admin_site )
-    
+
 If you have South installed then run::
 
     python manage.py migrate actions
@@ -61,7 +61,7 @@ otherwise::
     python manage.py syncdb
 
 
-Defining actions 
+Defining actions
 ----------------
 
 An action should like normal celery task be located in app/tasks.py (see [1] and [2]). Below is
@@ -69,11 +69,11 @@ an example of a action::
 
 
     from djangoplicity.actions.plugins import ActionPlugin
-    
+
     class SomeAction( ActionPlugin ):
         # User readable version of the action name
         action_name = 'User readable name'
-        
+
         # List of user definable parameters for this action - will be
         # passed to the run method in the ``conf'' variable.
         action_parameters = [
@@ -81,44 +81,44 @@ an example of a action::
             ( 'password', 'Admin password for list', 'str' ),
             ( 'somenum', 'Some num', 'int' ),
         ]
-        
+
         @classmethod
         def get_arguments( cls, conf, *args, **kwargs ):
-            # Custom processing of input arguments - this will run synchronously (i.e 
+            # Custom processing of input arguments - this will run synchronously (i.e
             # before the task is sent to the message queue). Hence, only very simple
-            # processing should be done here - e.g ensure input parameters are given 
+            # processing should be done here - e.g ensure input parameters are given
             # in a specific way etc.
             #
-            # You can prevent execution of the task by raising an exception here. 
+            # You can prevent execution of the task by raising an exception here.
             return (args,kwargs)
-            
+
         def run( self, conf, ... )
-            # conf looks like { '<param_name>' : <user defined value>, 'password' : <user defined value>, 
+            # conf looks like { '<param_name>' : <user defined value>, 'password' : <user defined value>,
             # 'somenum' : <user defined value> }
             #
-            # run will be invoked like this ``run( conf, *args, **kwargs)'' where ``args'' and ``kwargs'' 
+            # run will be invoked like this ``run( conf, *args, **kwargs)'' where ``args'' and ``kwargs''
             # are the once that are returned from ``get_arguments''.
-            
+
             # do something here ...
-            
+
     # Register the plugin so it's available in the admin.
     SomeAction.register()
-    
 
-Executing actions 
+
+Executing actions
 -----------------
 An action is executed a bit differently than a normal celery task::
 
     from djangoplicity.actions.models import Action
-    
-    a = Action.objects.get( ... )
-    a.dispatch( ... ) # what ever you provide as args, kwargs it is sent to get_arguments.   
 
-Once dispatch is called, get_arguments will be called immediately but the rest of the method will be 
+    a = Action.objects.get( ... )
+    a.dispatch( ... ) # what ever you provide as args, kwargs it is sent to get_arguments.
+
+Once dispatch is called, get_arguments will be called immediately but the rest of the method will be
 sent to a worker node to be done.
 
 Note, it is up to the third-party app developer to figure out how and where to plugin the executing of tasks.
-    
+
 Special notes
 -------------
 ActionPlugin is a subclass of celery.task.Task with some special methods implemented. Hence, you should
@@ -139,5 +139,5 @@ sure you put ``abstract = True'' in the class definition::
         abstract = True
 
 [1] http://ask.github.com/django-celery/getting-started/first-steps-with-django.html#defining-and-executing-tasks
-[2] http://ask.github.com/celery/configuration.html?highlight=celery_imports#celery-imports 
+[2] http://ask.github.com/celery/configuration.html?highlight=celery_imports#celery-imports
 """

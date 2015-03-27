@@ -14,7 +14,7 @@
 #      notice, this list of conditions and the following disclaimer in the
 #      documentation and/or other materials provided with the distribution.
 #
-#    * Neither the name of the European Southern Observatory nor the names 
+#    * Neither the name of the European Southern Observatory nor the names
 #      of its contributors may be used to endorse or promote products derived
 #      from this software without specific prior written permission.
 #
@@ -35,92 +35,91 @@ Djangoplicity Actions
 """
 
 from celery.task import Task
-import traceback
+
 
 class ActionPlugin( Task ):
 	"""
 	Interface for action plugins. The plugin itself is responsible for
-	consuming the configurable parameters that it is given in the 
+	consuming the configurable parameters that it is given in the
 	init constructor.
-	
+
 	Example of bare minium plugin::
-	
+
 		class SimpleAction( ActionPlugin ):
 			action_name = 'Simple action'
-		
+
 			def run( self, conf ):
 				print "Run"
-		
+
 		SimpleAction.register()
 	"""
 	abstract = True
-	
+
 	action_name = ''
 	action_parameters = []
-	
+
 	def run( self, conf, *args, **kwargs ):
 		"""
 		This method must be implemented by every subclass.
 		"""
 		raise NotImplementedError
-	
+
 	def on_failure( self, exc, task_id, args, kwargs, einfo ):
 		"""
 		Log a failure
 		"""
 		from djangoplicity.actions.models import ActionLog
-		
-		ActionLog( 
-			success = False,
-			plugin = self.get_class_path(),
-			name = self.action_name,
-			parameters = ';'.join( [ "%s = %s" % ( unicode( k ), unicode( v ) ) for k, v in args[0].items() ] ),
-			args = '; '.join( [unicode( x ) for x in args[1:]] ),
-			kwargs = ';'.join( [ "%s = %s" % ( unicode( k ), unicode( v ) ) for k, v in kwargs.items() ] ),
-			error = einfo.traceback,
+
+		ActionLog(
+			success=False,
+			plugin=self.get_class_path(),
+			name=self.action_name,
+			parameters=';'.join( [ "%s = %s" % ( unicode( k ), unicode( v ) ) for k, v in args[0].items() ] ),
+			args='; '.join( [unicode( x ) for x in args[1:]] ),
+			kwargs=';'.join( [ "%s = %s" % ( unicode( k ), unicode( v ) ) for k, v in kwargs.items() ] ),
+			error=einfo.traceback,
 		).save()
-				
-	
+
 	def on_success( self, retval, task_id, args, kwargs ):
 		"""
 		Log a success
 		"""
 		from djangoplicity.actions.models import ActionLog
-		ActionLog( 
-			success = True,
-			plugin = self.get_class_path(),
-			name = self.action_name,
-			parameters = ';'.join( [ "%s = %s" % ( unicode( k ), unicode( v ) ) for k, v in args[0].items() ] ),
-			args = '; '.join( [unicode( x ) for x in args[1:]] ),
-			kwargs = ';'.join( [ "%s = %s" % ( unicode( k ), unicode( v ) ) for k, v in kwargs.items() ] ),
+		ActionLog(
+			success=True,
+			plugin=self.get_class_path(),
+			name=self.action_name,
+			parameters=';'.join( [ "%s = %s" % ( unicode( k ), unicode( v ) ) for k, v in args[0].items() ] ),
+			args='; '.join( [unicode( x ) for x in args[1:]] ),
+			kwargs=';'.join( [ "%s = %s" % ( unicode( k ), unicode( v ) ) for k, v in kwargs.items() ] ),
 		).save()
 
-	@classmethod	
+	@classmethod
 	def dispatch( cls, conf, *args, **kwargs ):
 		"""
 		Method is called by Action.dispatch together with the desired configuration.
-		
+
 		Custom processing of the input parameters can be done via the get_arguments_method.
 		"""
 		args, kwargs = cls.get_arguments( conf, *args, **kwargs )
 		cls.delay( conf, *args, **kwargs )
-	
+
 	@classmethod
 	def get_arguments( cls, conf, *args, **kwargs ):
 		"""
 		Custom processing of input parameters (e.g. convert objects to primary keys).
-		
+
 		By default the input arguments are just passed through.
 		"""
 		return ( args, kwargs )
-	
+
 	@classmethod
 	def get_class_path( cls ):
 		"""
 		Get the complete import path for this module.
 		"""
 		return "%s.%s" % ( cls.__module__, cls.__name__ )
-	
+
 	@classmethod
 	def register( cls ):
 		"""
