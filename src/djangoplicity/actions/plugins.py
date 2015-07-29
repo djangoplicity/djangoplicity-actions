@@ -34,9 +34,16 @@
 Djangoplicity Actions
 """
 
+import logging
+
 from celery.task import Task
 
+from django.conf import settings
 
+logger = logging.getLogger(__name__)
+
+
+# pylint: disable=R0921
 class ActionPlugin( Task ):
 	"""
 	Interface for action plugins. The plugin itself is responsible for
@@ -101,6 +108,10 @@ class ActionPlugin( Task ):
 
 		Custom processing of the input parameters can be done via the get_arguments_method.
 		"""
+		if settings.SITE_ENVIRONMENT != 'production':
+			logger.info('Actions are only run on production system, won\'t run: %s', cls)
+			return
+
 		args, kwargs = cls.get_arguments( conf, *args, **kwargs )
 		cls.delay( conf, *args, **kwargs )
 
