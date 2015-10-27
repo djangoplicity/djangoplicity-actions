@@ -14,7 +14,7 @@
 #      notice, this list of conditions and the following disclaimer in the
 #      documentation and/or other materials provided with the distribution.
 #
-#    * Neither the name of the European Southern Observatory nor the names 
+#    * Neither the name of the European Southern Observatory nor the names
 #      of its contributors may be used to endorse or promote products derived
 #      from this software without specific prior written permission.
 #
@@ -34,11 +34,13 @@
 Djangoplicity Actions
 """
 
+import logging
+
+from django.core.cache import cache
 from django.db import models
 from django.db.models.signals import post_save
+
 from djangoplicity.actions.plugins import ActionPlugin
-import traceback
-import logging
 
 logger = logging.getLogger( 'djangoplicity' )
 
@@ -80,7 +82,7 @@ class Action( models.Model ):
 		Get parameters to be send to the action
 		"""
 		return dict( [( p.name, p.get_value() ) for p in ActionParameter.objects.filter( action=self ) ] )
-	
+
 	def dispatch( self, *args, **kwargs ):
 		"""
 		Execute action - note the action will be executed in the background.
@@ -191,17 +193,15 @@ class ActionLog( models.Model ):
 	args = models.TextField( blank=True )
 	kwargs = models.TextField( blank=True )
 	error = models.TextField( blank=True )
-	
+
 	class Meta:
 		ordering = ['-timestamp']
-		
 
-from django.core.cache import cache
 
 class EventAction( models.Model ):
 	action = models.ForeignKey( Action )
 	on_event = models.CharField( max_length=50, choices=[], db_index=True )
-	
+
 	@classmethod
 	def _get_key( cls ):
 		"""
@@ -209,11 +209,11 @@ class EventAction( models.Model ):
 		"""
 		raise NotImplementedError
 	_key = property( _get_key )
-	
+
 	def save( self, *args, **kwargs ):
 		super( EventAction, self ).save( *args, **kwargs )
 		self.clear_cache()
-	
+
 	@classmethod
 	def clear_cache( cls, *args, **kwargs ):
 		"""
@@ -221,19 +221,19 @@ class EventAction( models.Model ):
 		"""
 		logger.debug( "clearing action cache" )
 		cache.delete( cls._key )
-		
+
 	@classmethod
 	def create_cache( cls, *args, **kwargs ):
 		"""
 		Generate new action cache.
-		
+
 		The cache has two ways of indexing:
 			* by related object then event
 			* or, event then related object
-			
-		Since ``rel_pk'' are always numbers, and ``on_event'' is 
-		always characters, the keys will not collide. 
-		
+
+		Since ``rel_pk'' are always numbers, and ``on_event'' is
+		always characters, the keys will not collide.
+
 		cache = {
 			'<rel_pk>' : {
 				'<on_event>' : [ <action>, ... ],
@@ -243,7 +243,7 @@ class EventAction( models.Model ):
 			'<on_event>' : {
 				'<rel_pk>' : [ <action>, ... ],
 				'<rel_pk>' : [ <action>, ... ],
-			}, 
+			},
 			...
 		}
 		"""
@@ -256,12 +256,12 @@ class EventAction( models.Model ):
 				action_cache[ g_pk ] = {}
 			if a.on_event not in action_cache[g_pk]:
 				action_cache[ g_pk ][a.on_event] = []
-			
+
 			if a.on_event not in action_cache:
 				action_cache[a.on_event] = {}
 			if g_pk not in action_cache[a.on_event]:
 				action_cache[a.on_event][ g_pk ] = []
-			
+
 			action_cache[ g_pk ][a.on_event].append( a.action )
 			action_cache[ a.on_event ][g_pk].append( a.action )
 
@@ -269,35 +269,34 @@ class EventAction( models.Model ):
 
 		cache.set( cls._key, action_cache )
 		return action_cache
-	
+
 	@classmethod
-	def get_cache( cls,  ):
+	def get_cache( cls ):
 		"""
 		Get the action cache - generate it if necessary.
-		
+
 		Caches results to prevent many queries to the database. Currently the entire
 		table is cached, however in case of issues, this caching strategy can be improved.
 		"""
 		action_cache = cache.get( cls._key )
-		
+
 		# Prime cache if needed
 		if action_cache is None:
 			action_cache = cls.create_cache()
-		
+
 		return action_cache
-		
+
 	@classmethod
 	def get_actions_for_event( cls, on_event, pk=None ):
 		"""
 		"""
 		action_cache = cls.get_cache()
-		
+
 		try:
 			actions = action_cache[on_event]
 			return actions if pk is None else actions[str( pk )]
 		except:
 			return {} if pk is None else []
-		
 
 	@classmethod
 	def get_actions( cls, pk, on_event=None ):
@@ -305,19 +304,19 @@ class EventAction( models.Model ):
 		Get all actions defined for a certain group.
 		"""
 		action_cache = cls.get_cache()
-		
+
 		if isinstance( pk, models.Model ):
 			pk = pk.pk
 
-		# Find actions for this group 
+		# Find actions for this group
 		try:
 			actions = action_cache[ str( pk ) ]
 			return actions if on_event is None else actions[on_event]
 		except KeyError:
 			return {} if on_event is None else []
-	
+
 	class Meta:
 		abstract = True
-		
+
 # Connect signal handlers
 post_save.connect( Action.post_save_handler, sender=Action )
