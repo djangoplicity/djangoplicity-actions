@@ -59,7 +59,7 @@ class Action( models.Model ):
 		Set choices for plugin field dynamically based on registered plugins.
 		"""
 		super( Action, self ).__init__( *args, **kwargs )
-		self._meta.get_field_by_name( 'plugin' )[0]._choices = Action.get_plugin_choices()
+		self._meta.get_field( 'plugin' )._choices = Action.get_plugin_choices()
 
 	def get_plugincls( self ):
 		"""
