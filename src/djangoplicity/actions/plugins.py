@@ -39,11 +39,11 @@ import logging
 from celery.task import Task
 
 from django.conf import settings
+from django.db import transaction
 
 logger = logging.getLogger(__name__)
 
 
-# pylint: disable=R0921
 class ActionPlugin( Task ):
 	"""
 	Interface for action plugins. The plugin itself is responsible for
@@ -113,7 +113,9 @@ class ActionPlugin( Task ):
 			return
 
 		args, kwargs = cls.get_arguments( conf, *args, **kwargs )
-		cls.delay( conf, *args, **kwargs )
+		transaction.on_commit(
+			lambda: cls.delay( conf, *args, **kwargs )
+		)
 
 	@classmethod
 	def get_arguments( cls, conf, *args, **kwargs ):
