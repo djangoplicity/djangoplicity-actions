@@ -45,98 +45,98 @@ logger = logging.getLogger(__name__)
 
 
 class ActionPlugin( Task ):
-	"""
-	Interface for action plugins. The plugin itself is responsible for
-	consuming the configurable parameters that it is given in the
-	init constructor.
+    """
+    Interface for action plugins. The plugin itself is responsible for
+    consuming the configurable parameters that it is given in the
+    init constructor.
 
-	Example of bare minium plugin::
+    Example of bare minium plugin::
 
-		class SimpleAction( ActionPlugin ):
-			action_name = 'Simple action'
+        class SimpleAction( ActionPlugin ):
+            action_name = 'Simple action'
 
-			def run( self, conf ):
-				print "Run"
+            def run( self, conf ):
+                print "Run"
 
-		SimpleAction.register()
-	"""
-	abstract = True
+        SimpleAction.register()
+    """
+    abstract = True
 
-	action_name = ''
-	action_parameters = []
+    action_name = ''
+    action_parameters = []
 
-	def run( self, conf, *args, **kwargs ):
-		"""
-		This method must be implemented by every subclass.
-		"""
-		raise NotImplementedError
+    def run( self, conf, *args, **kwargs ):
+        """
+        This method must be implemented by every subclass.
+        """
+        raise NotImplementedError
 
-	def on_failure( self, exc, task_id, args, kwargs, einfo ):
-		"""
-		Log a failure
-		"""
-		from djangoplicity.actions.models import ActionLog
+    def on_failure( self, exc, task_id, args, kwargs, einfo ):
+        """
+        Log a failure
+        """
+        from djangoplicity.actions.models import ActionLog
 
-		ActionLog(
-			success=False,
-			plugin=self.get_class_path(),
-			name=self.action_name,
-			parameters=';'.join( [ "%s = %s" % ( unicode( k ), unicode( v ) ) for k, v in args[0].items() ] ),
-			args='; '.join( [unicode( x ) for x in args[1:]] ),
-			kwargs=';'.join( [ "%s = %s" % ( unicode( k ), unicode( v ) ) for k, v in kwargs.items() ] ),
-			error=einfo.traceback,
-		).save()
+        ActionLog(
+            success=False,
+            plugin=self.get_class_path(),
+            name=self.action_name,
+            parameters=';'.join( [ "%s = %s" % ( unicode( k ), unicode( v ) ) for k, v in args[0].items() ] ),
+            args='; '.join( [unicode( x ) for x in args[1:]] ),
+            kwargs=';'.join( [ "%s = %s" % ( unicode( k ), unicode( v ) ) for k, v in kwargs.items() ] ),
+            error=einfo.traceback,
+        ).save()
 
-	def on_success( self, retval, task_id, args, kwargs ):
-		"""
-		Log a success
-		"""
-		from djangoplicity.actions.models import ActionLog
-		ActionLog(
-			success=True,
-			plugin=self.get_class_path(),
-			name=self.action_name,
-			parameters=';'.join( [ "%s = %s" % ( unicode( k ), unicode( v ) ) for k, v in args[0].items() ] ),
-			args='; '.join( [unicode( x ) for x in args[1:]] ),
-			kwargs=';'.join( [ "%s = %s" % ( unicode( k ), unicode( v ) ) for k, v in kwargs.items() ] ),
-		).save()
+    def on_success( self, retval, task_id, args, kwargs ):
+        """
+        Log a success
+        """
+        from djangoplicity.actions.models import ActionLog
+        ActionLog(
+            success=True,
+            plugin=self.get_class_path(),
+            name=self.action_name,
+            parameters=';'.join( [ "%s = %s" % ( unicode( k ), unicode( v ) ) for k, v in args[0].items() ] ),
+            args='; '.join( [unicode( x ) for x in args[1:]] ),
+            kwargs=';'.join( [ "%s = %s" % ( unicode( k ), unicode( v ) ) for k, v in kwargs.items() ] ),
+        ).save()
 
-	@classmethod
-	def dispatch( cls, conf, *args, **kwargs ):
-		"""
-		Method is called by Action.dispatch together with the desired configuration.
+    @classmethod
+    def dispatch( cls, conf, *args, **kwargs ):
+        """
+        Method is called by Action.dispatch together with the desired configuration.
 
-		Custom processing of the input parameters can be done via the get_arguments_method.
-		"""
-		if settings.SITE_ENVIRONMENT != 'production':
-			logger.info('Actions are only run on production system, won\'t run: %s', cls)
-			return
+        Custom processing of the input parameters can be done via the get_arguments_method.
+        """
+        if settings.SITE_ENVIRONMENT != 'production':
+            logger.info('Actions are only run on production system, won\'t run: %s', cls)
+            return
 
-		args, kwargs = cls.get_arguments( conf, *args, **kwargs )
-		transaction.on_commit(
-			lambda: cls.delay( conf, *args, **kwargs )
-		)
+        args, kwargs = cls.get_arguments( conf, *args, **kwargs )
+        transaction.on_commit(
+            lambda: cls.delay( conf, *args, **kwargs )
+        )
 
-	@classmethod
-	def get_arguments( cls, conf, *args, **kwargs ):
-		"""
-		Custom processing of input parameters (e.g. convert objects to primary keys).
+    @classmethod
+    def get_arguments( cls, conf, *args, **kwargs ):
+        """
+        Custom processing of input parameters (e.g. convert objects to primary keys).
 
-		By default the input arguments are just passed through.
-		"""
-		return ( args, kwargs )
+        By default the input arguments are just passed through.
+        """
+        return ( args, kwargs )
 
-	@classmethod
-	def get_class_path( cls ):
-		"""
-		Get the complete import path for this module.
-		"""
-		return "%s.%s" % ( cls.__module__, cls.__name__ )
+    @classmethod
+    def get_class_path( cls ):
+        """
+        Get the complete import path for this module.
+        """
+        return "%s.%s" % ( cls.__module__, cls.__name__ )
 
-	@classmethod
-	def register( cls ):
-		"""
-		Register plugin.
-		"""
-		from djangoplicity.actions.models import Action
-		Action.register_plugin( cls )
+    @classmethod
+    def register( cls ):
+        """
+        Register plugin.
+        """
+        from djangoplicity.actions.models import Action
+        Action.register_plugin( cls )
