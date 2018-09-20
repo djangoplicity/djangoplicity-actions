@@ -108,7 +108,7 @@ class ActionPlugin( Task ):
 
         Custom processing of the input parameters can be done via the get_arguments_method.
         """
-        if settings.SITE_ENVIRONMENT != 'production':
+        if settings.SITE_ENVIRONMENT != 'prod':
             logger.info('Actions are only run on production system, won\'t run: %s', cls)
             return
 
