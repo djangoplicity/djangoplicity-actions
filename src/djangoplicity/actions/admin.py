@@ -35,38 +35,38 @@ from djangoplicity.actions.models import Action, ActionParameter, ActionLog
 
 
 class ActionParameterInlineAdmin( admin.TabularInline ):
-	model = ActionParameter
-	extra = 0
-	max_num = 0
-	readonly_fields = ['type', 'help_text', 'name']
-	can_delete = False
-	fields = ['name', 'value', 'type', 'help_text', ]
+    model = ActionParameter
+    extra = 0
+    max_num = 0
+    readonly_fields = ['type', 'help_text', 'name']
+    can_delete = False
+    fields = ['name', 'value', 'type', 'help_text', ]
 
 
 class ActionAdmin( admin.ModelAdmin ):
-	list_display = [ 'name', 'plugin' ]
-	list_filter = ['plugin']
-	search_fields = [ 'name', 'plugin', ]
-	inlines = [ ActionParameterInlineAdmin ]
+    list_display = [ 'name', 'plugin' ]
+    list_filter = ['plugin']
+    search_fields = [ 'name', 'plugin', ]
+    inlines = [ ActionParameterInlineAdmin ]
 
 
 class ActionLogAdmin( admin.ModelAdmin ):
-	list_display = [ 'timestamp', 'name', 'plugin', 'parameters', 'success', ]
-	list_filter = ['plugin', 'success', 'timestamp']
-	search_fields = [ 'name', 'plugin', 'error', 'parameters', 'args', 'kwargs' ]
-	readonly_fields = [ 'timestamp', 'name', 'plugin', 'parameters', 'success', 'error', 'args', 'kwargs' ]
+    list_display = [ 'timestamp', 'name', 'plugin', 'parameters', 'success', ]
+    list_filter = ['plugin', 'success', 'timestamp']
+    search_fields = [ 'name', 'plugin', 'error', 'parameters', 'args', 'kwargs' ]
+    readonly_fields = [ 'timestamp', 'name', 'plugin', 'parameters', 'success', 'error', 'args', 'kwargs' ]
 
-	def has_add_permission( self, request ):
-		"""
-		ActionLog should only be browsed, hence we prevent all users from adding new
-		entries.
-		"""
-		return False
+    def has_add_permission( self, request ):
+        """
+        ActionLog should only be browsed, hence we prevent all users from adding new
+        entries.
+        """
+        return False
 
 
 def register_with_admin( admin_site ):
-	admin_site.register( Action, ActionAdmin )
-	admin_site.register( ActionLog, ActionLogAdmin )
+    admin_site.register( Action, ActionAdmin )
+    admin_site.register( ActionLog, ActionLogAdmin )
 
 # Register with default admin site
 register_with_admin( admin.site )

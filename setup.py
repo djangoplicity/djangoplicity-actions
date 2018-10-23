@@ -34,20 +34,20 @@ import os
 from setuptools import setup, find_packages
 
 setup(
-	name = 'djangoplicity-actions',
-	version = '0.1',
-	packages = find_packages('src'),
-	package_dir = { '': 'src' },
-	include_package_data = True,
-	zip_safe = False,
-	namespace_packages = ['djangoplicity'],
+    name = 'djangoplicity-actions',
+    version = '0.1',
+    packages = find_packages('src'),
+    package_dir = { '': 'src' },
+    include_package_data = True,
+    zip_safe = False,
+    namespace_packages = ['djangoplicity'],
     install_requires = ['setuptools'],
-	
-	# metadata for upload to PyPI
-	author = 'European Southern Observatory',
-	author_email = 'information@eso.org',
-	description = 'Djangoplicity application for',
-	license = "New BSD License",
-	keywords = "django djangoplicity",
-	url = "http://www.djangoplicity.org/app/actions/"
+    
+    # metadata for upload to PyPI
+    author = 'European Southern Observatory',
+    author_email = 'information@eso.org',
+    description = 'Djangoplicity application for',
+    license = "New BSD License",
+    keywords = "django djangoplicity",
+    url = "http://www.djangoplicity.org/app/actions/"
 )
