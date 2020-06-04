@@ -36,7 +36,7 @@ from setuptools import setup, find_packages
 setup(
     name = 'djangoplicity-actions',
     version = '0.1'
-    packages = find_packages(include=['djangoplicity', 'djangoplicity.*']),
+    packages=find_packages(include=['djangoplicity', 'djangoplicity.*']),
     include_package_data = True,
     zip_safe = False,
     install_requires = ['setuptools'],
