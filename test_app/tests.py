@@ -8,4 +8,4 @@ from djangoplicity.actions.models import Action
 class ActionsTestCase(TestCase):
 
     def test_action(self):
-        print ''
+        self.assertIsNone(None)
