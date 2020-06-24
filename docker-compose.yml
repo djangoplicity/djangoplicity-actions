@@ -6,11 +6,12 @@ services:
     container_name: djangoplicity-actions-db
     restart: always
     environment:
-      POSTGRES_DB: djangoplicity-actions
-      POSTGRES_USER: djangoplicity-actions
-      POSTGRES_PASSWORD: djangoplicity-actions
+      POSTGRES_DB: djangoplicityActions
+      POSTGRES_USER: djangoplicityActions
+      POSTGRES_PASSWORD: djangoplicityActions
+      POSTGRES_HOST_AUTH_METHOD: trust
     volumes:
-      - pgdata:/var/lib/postgresql/data
+      - ./pgdata:/var/lib/postgresql/data
     ports:
       - "5433:5432"
 
