@@ -23,6 +23,8 @@ services:
     volumes:
       - ./djangoplicity:/app/djangoplicity
       - ./test_project/:/app/test_project
+      - ./htmlcov:/app/htmlcov
+      - ./.coveragerc:/app/.coveragerc
       - ./test_app:/app/test_app
     ports:
       - "8001:8000"

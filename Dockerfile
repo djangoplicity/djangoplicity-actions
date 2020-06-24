@@ -23,4 +23,6 @@ COPY djangoplicity/ djangoplicity/
 COPY test_project/ test_project/
 COPY test_app/ test_app/
 COPY setup.py .
+COPY tox.ini .
+COPY .coveragerc .
 COPY manage.py .
