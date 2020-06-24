@@ -1,0 +1,31 @@
+version: '3'
+
+services:
+  db:
+    image: postgres:10.5
+    container_name: djangoplicity-actions-db
+    restart: always
+    environment:
+      POSTGRES_DB: djangoplicity-actions
+      POSTGRES_USER: djangoplicity-actions
+      POSTGRES_PASSWORD: djangoplicity-actions
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    ports:
+      - "5433:5432"
+
+  web:
+    build: .
+    container_name: djangoplicity-actions-web
+    command: python manage.py migrate
+    command: python manage.py runserver 0.0.0.0:8000
+    volumes:
+      - ./djangoplicity:/app/djangoplicity
+      - ./test_project/:/app/test_project
+      - ./test_app:/app/test_app
+    ports:
+      - "8001:8000"
+    depends_on:
+      - db
+volumes:
+  pgdata:
