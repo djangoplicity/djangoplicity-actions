@@ -78,9 +78,9 @@ WSGI_APPLICATION = 'test_project.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'djangoplicityActions',
-        'USER': 'djangoplicityActions',
-        'PASSWORD': 'djangoplicityActions',
+        'NAME': 'djangoplicity-actions',
+        'USER': 'djangoplicity-actions',
+        'PASSWORD': 'djangoplicity-actions',
         'HOST': 'djangoplicity-actions-db',
         'PORT': '5432',
     }
