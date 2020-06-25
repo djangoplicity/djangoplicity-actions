@@ -1,4 +1,4 @@
-name: Djangoplicity Customsearch CI
+name: Djangoplicity Actions CI
 
 on:
   push:
