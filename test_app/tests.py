@@ -21,4 +21,4 @@ class SimpleAction( ActionPlugin ):
     action_name = 'Simple action'
 
     def run( self, conf ):
-        print "Run"
+        pass
