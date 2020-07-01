@@ -6,7 +6,7 @@ test:
 
 coverage-html:
 	docker exec -it djangoplicity-actions-web coverage html
-	open ./htmlcov/index.html
+	google-chrome htmlcov/index.html
 
 test-python27:
 	docker exec -it djangoplicity-actions-web tox -e py27-django111

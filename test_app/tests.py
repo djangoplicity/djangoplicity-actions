@@ -11,10 +11,10 @@ class ActionsTestCase(TestCase):
     #add new action, register it and get choices list for this action
     def test_action(self):
         action = Action(plugin='Simple action', name='test')
-        simpleAction = SimpleAction()
         action.register_plugin(SimpleAction)
         list_choices = action.get_plugin_choices()
         self.assertEquals(list_choices, [(SimpleAction.get_class_path(), SimpleAction.action_name)] )
+        # self.assertIsNone(None)
 
 
 class SimpleAction( ActionPlugin ):
