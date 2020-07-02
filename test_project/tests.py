@@ -27,9 +27,9 @@ class ActionsTestCase(TestCase):
         self.assertEquals(list_choices, [(SimpleAction.get_class_path(), SimpleAction.action_name)] )
         # self.assertIsNone(None)
     
-    def test_other(self):
-        actionParameter = self.createActionParameter()
-        return actionParameter
+    # def test_other(self):
+    #     actionParameter = self.createActionParameter()
+    #     return actionParameter
 
 
 class SimpleAction( ActionPlugin ):
