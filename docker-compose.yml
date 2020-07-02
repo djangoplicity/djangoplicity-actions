@@ -18,14 +18,14 @@ services:
   web:
     build: .
     container_name: djangoplicity-actions-web
-    command: python manage.py migrate
-    command: python manage.py runserver 0.0.0.0:8000
+    command: ['./scripts/command-dev.sh']
+    # command: python manage.py migrate
+    # command: python manage.py runserver 0.0.0.0:8000
     volumes:
       - ./djangoplicity:/app/djangoplicity
       - ./test_project/:/app/test_project
       - ./htmlcov:/app/htmlcov
       - ./.coveragerc:/app/.coveragerc
-      - ./test_app:/app/test_app
     ports:
       - "8001:8000"
     depends_on:

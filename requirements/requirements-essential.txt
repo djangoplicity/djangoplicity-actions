@@ -1,5 +1,5 @@
 django==1.11.29
-# dependeces setup
+# dependences setup
 setuptools
 
 # Asynchronous Task Queue
