@@ -27,6 +27,8 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
+SITE_ENVIRONMENT = ''
+
 
 # Application definition
 

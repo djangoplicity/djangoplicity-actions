@@ -19,8 +19,6 @@ services:
     build: .
     container_name: djangoplicity-actions-web
     command: ['./scripts/command-dev.sh']
-    # command: python manage.py migrate
-    # command: python manage.py runserver 0.0.0.0:8000
     volumes:
       - ./djangoplicity:/app/djangoplicity
       - ./test_project/:/app/test_project
