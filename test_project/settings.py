@@ -29,6 +29,8 @@ ALLOWED_HOSTS = []
 
 SITE_ENVIRONMENT = ''
 
+TEST_RUNNER  =  'djcelery.contrib.test_runner.CeleryTestSuiteRunner'
+
 
 # Application definition
 
@@ -42,6 +44,8 @@ INSTALLED_APPS = [
     'test_project',
     'djangoplicity.actions',
 ]
+
+INSTALLED_APPS += ("djcelery", )
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',

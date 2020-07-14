@@ -4,13 +4,16 @@ from __future__ import unicode_literals
 from django.test import TestCase, TransactionTestCase
 from djangoplicity.actions.models import Action, ActionParameter, ActionLog
 from djangoplicity.actions.plugins import ActionPlugin
+from test_project.models import SimpleAction, SimpleError
+
+import traceback
 
 # Create your tests here.
-class ActionsTestCase(TestCase, TransactionTestCase):
+class ActionsTestCase(TestCase):
 
     def createNewAction(self):
         Action.objects.all().delete()
-        a = Action(plugin='test_project.tests.SimpleAction', name='Simple action')
+        a = Action(plugin='test_project.models.SimpleAction', name='Simple action')
         a.register_plugin(SimpleAction)
         a.save()
         return a
@@ -49,6 +52,7 @@ class ActionsTestCase(TestCase, TransactionTestCase):
         a = self.createNewAction()
         p = self.createNewActionParameter(a)
         a.dispatch()
+        #self.assertTrue(SimpleAction.successful())
         a.post_save_handler()
 
     # get_value method get value of the parameter 
@@ -67,6 +71,21 @@ class ActionsTestCase(TestCase, TransactionTestCase):
         log = a.get_plugin()
         log.on_success(retval=None, task_id=None, args=({u"message": u"hello", u"name": u"world"}, {u"message": u"hello", u"name": u"world"}), kwargs={u"message": u"hello", u"name": u"world"})
         # self.assertEquals(a.name, u'Simple action')
+
+    def test_on_failure(self):
+        a = self.createNewAction()
+        p = self.createNewActionParameter(a)
+        log = a.get_plugin()
+        
+        args=({u"message": u"hello", u"name": u"world"}, {u"message": u"hello", u"name": u"world"})
+        kwargs={u"message": u"hello", u"name": u"world"}
+        try:
+            raise RuntimeError('something bad happened!')
+        except RuntimeError as inst:
+            info=traceback.format_exc()
+            einfo=SimpleError(info)
+        log.on_failure(exc=None, task_id=None, args=args, kwargs=kwargs, einfo=einfo)
+        # self.assertEquals(a.name, u'Simple action')
     
     def test_get_arguments(self):
         a = self.createNewAction()
@@ -81,33 +100,16 @@ class ActionsTestCase(TestCase, TransactionTestCase):
         log = a.get_plugin()
         path = log.get_class_path()
         self.assertEquals(path, SimpleAction.get_class_path())
+    
+    def test_register(self):
+        Action.objects.all().delete()
+        SimpleAction.register()
+        list_register={'test_project.models.SimpleAction':SimpleAction}
+        self.assertEquals(Action._plugins, list_register)
             
-
-class SimpleAction( ActionPlugin ):
-    action_name = 'Simple action'
-
-    action_parameters = [
-            ('name', 'list name', 'str'),
-            ( 'password', 'Admin password for list', 'str' ),
-            ( 'somenum', 'Some num', 'int' ),
-        ]
-    abstract = True
-
-    def __init__(self, *args, **kwargs):
-        pass
-
-    def run( self, conf ):
-        pass
-
-# class SomeEventAction(EventAction):
-#     '''
-#     Define actions to be executed when a event occurs for a list (e.g. sub,
-#     unsub, clean etc.)
-#     '''
-#     def __init__(self, *args, **kwargs):
-#         super(SomeEventAction, self).__init__(*args, **kwargs)
-#         self._meta.get_field('on_event')._choices = ACTION_EVENTS
-
-#     model_object = models.ForeignKey(SomeList)
-
-#     _key = 'djangoplicity.mailinglists.action_cache'
+    def test_run(self):
+            Action.objects.all().delete()
+            a=SimpleAction()
+            a.run('test')
+            print a.action_run_test
+            self.assertEquals(u'test', a.action_run_test)
