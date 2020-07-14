@@ -11,8 +11,6 @@ https://docs.djangoproject.com/en/1.11/ref/settings/
 """
 
 import os
-import djcelery
-djcelery.setup_loader()
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -31,7 +29,7 @@ ALLOWED_HOSTS = []
 
 SITE_ENVIRONMENT = ''
 
-TEST_RUNNER  =  'djcelery.contrib.test_runner.CeleryTestSuiteRunner'
+# TEST_RUNNER  =  'djcelery.contrib.test_runner.CeleryTestSuiteRunner'
 
 
 # Application definition
@@ -47,7 +45,7 @@ INSTALLED_APPS = [
     'djangoplicity.actions',
 ]
 
-INSTALLED_APPS += ("djcelery", )
+# INSTALLED_APPS += ("djcelery", )
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
