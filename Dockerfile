@@ -17,6 +17,8 @@ COPY requirements/ requirements/
 COPY requirements.txt .
 
 RUN pip install -r requirements.txt --find-links https://www.djangoplicity.org/repository/packages/
+# Create app required directories
+RUN mkdir -p tmp
 
 COPY scripts/ scripts/
 RUN chmod +x scripts/command-dev.sh
