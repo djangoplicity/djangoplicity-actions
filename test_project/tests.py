@@ -6,6 +6,9 @@ from djangoplicity.actions.models import Action, ActionParameter, ActionLog
 from djangoplicity.actions.plugins import ActionPlugin
 from test_project.models import SimpleAction, SimpleError
 
+from mock import patch
+from djangoplicity.actions.tasks import hello
+
 import traceback
 
 # Create your tests here.
@@ -113,3 +116,9 @@ class ActionsTestCase(TestCase):
             a.run('test')
             print a.action_run_test
             self.assertEquals(u'test', a.action_run_test)
+    
+    # @patch('djangoplicity.actions.tasks.hello')
+    def test_task(self):
+        with patch('test_project.tests.ActionsTestCase.test_task') as mock_task:
+            hello.delay()
+            self.assertTrue(mock_task.called)
