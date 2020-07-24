@@ -13,3 +13,6 @@ test-python27:
 
 futurize-stage1:
 	docker exec -it djangoplicity-actions-web futurize --stage1 -w -n .
+
+futurize-stage2:
+	docker exec -it djangoplicity-actions-web futurize --stage2 -w -n .
