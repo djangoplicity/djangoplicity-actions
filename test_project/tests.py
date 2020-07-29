@@ -117,8 +117,8 @@ class ActionsTestCase(TestCase):
             print a.action_run_test
             self.assertEquals(u'test', a.action_run_test)
     
-    # @patch('djangoplicity.actions.tasks.hello')
-    def test_task(self):
-        with patch('test_project.tests.ActionsTestCase.test_task') as mock_task:
-            hello.delay()
-            self.assertTrue(mock_task.called)
+    # # @patch('djangoplicity.actions.tasks.hello')
+    # def test_task(self):
+    #     with patch('test_project.tests.ActionsTestCase.test_task') as mock_task:
+    #         hello.delay()
+    #         self.assertTrue(mock_task.called)
