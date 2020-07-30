@@ -1,0 +1,5 @@
+#test dependecies
+coverage
+tox
+# to test task celery
+mock

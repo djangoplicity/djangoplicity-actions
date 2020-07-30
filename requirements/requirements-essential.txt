@@ -1,0 +1,10 @@
+django==1.11.29
+# dependences setup
+setuptools
+
+# Asynchronous Task Queue
+celery==4.3.0
+#django-celery
+
+# postgres client 
+psycopg2-binary==2.7.7

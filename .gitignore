@@ -1,1 +1,6 @@
 *.pyc
+.vscode
+htmlcov
+htmlcov/*
+!htmlcov/.keep
+pgdata
