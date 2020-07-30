@@ -7,7 +7,6 @@ from djangoplicity.actions.plugins import ActionPlugin
 from test_project.models import SimpleAction, SimpleError
 
 from mock import patch
-from djangoplicity.actions.tasks import hello
 
 import traceback
 
