@@ -1,3 +1,4 @@
+from builtins import object
 from django.db import models
 from djangoplicity.actions.models import EventAction
 from djangoplicity.actions.plugins import ActionPlugin
@@ -42,6 +43,6 @@ class SimpleAction( ActionPlugin ):
     def run( self, conf ):
         self.action_run_test = conf
 
-class SimpleError():
+class SimpleError(object):
     def __init__(self, traceback):
         self.traceback=traceback

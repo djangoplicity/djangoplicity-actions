@@ -34,6 +34,8 @@
 Djangoplicity Actions
 """
 
+from builtins import str
+from builtins import object
 import logging
 
 from django.core.cache import cache
@@ -103,7 +105,7 @@ class Action( models.Model ):
         """
         Get list of action plug-in choices
         """
-        choices = [ ( p, pcls.action_name ) for p, pcls in cls._plugins.items() ]
+        choices = [ ( p, pcls.action_name ) for p, pcls in list(cls._plugins.items()) ]
         choices.sort( key=lambda x: x[1] )
         return list( choices )
 
@@ -137,13 +139,13 @@ class Action( models.Model ):
                     pass
 
             # Delete unknown parameters
-            for param in known_params.values():
+            for param in list(known_params.values()):
                 param.delete()
 
     def __unicode__( self ):
         return "%s: %s" % ( self.get_plugincls().name, self.name )
 
-    class Meta:
+    class Meta(object):
         ordering = ['name']
 
 
@@ -176,7 +178,7 @@ class ActionParameter( models.Model ):
     def __unicode__( self ):
         return u"%s = %s (%s)" % ( self.name, self.value, self.type )
 
-    class Meta:
+    class Meta(object):
         ordering = ['action', 'name']
         unique_together = ['action', 'name']
 
@@ -194,7 +196,7 @@ class ActionLog( models.Model ):
     kwargs = models.TextField( blank=True )
     error = models.TextField( blank=True )
 
-    class Meta:
+    class Meta(object):
         ordering = ['-timestamp']
 
 
@@ -315,7 +317,7 @@ class EventAction( models.Model ):
         except KeyError:
             return {} if on_event is None else []
 
-    class Meta:
+    class Meta(object):
         abstract = True
 
 # Connect signal handlers
