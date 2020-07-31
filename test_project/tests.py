@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
+from __future__ import print_function
 
 from django.test import TestCase, TransactionTestCase
 from djangoplicity.actions.models import Action, ActionParameter, ActionLog
@@ -113,7 +114,7 @@ class ActionsTestCase(TestCase):
             Action.objects.all().delete()
             a=SimpleAction()
             a.run('test')
-            print a.action_run_test
+            print(a.action_run_test)
             self.assertEquals(u'test', a.action_run_test)
     
     # # @patch('djangoplicity.actions.tasks.hello')
