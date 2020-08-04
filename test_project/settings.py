@@ -29,8 +29,6 @@ ALLOWED_HOSTS = []
 
 SITE_ENVIRONMENT = ''
 
-# TEST_RUNNER  =  'djcelery.contrib.test_runner.CeleryTestSuiteRunner'
-
 
 # Application definition
 
@@ -38,6 +36,7 @@ INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
+    'django.contrib.sites',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
@@ -45,7 +44,6 @@ INSTALLED_APPS = [
     'djangoplicity.actions',
 ]
 
-# INSTALLED_APPS += ("djcelery", )
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
