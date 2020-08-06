@@ -5,6 +5,7 @@ from django.test import TestCase, TransactionTestCase
 from djangoplicity.actions.models import Action, ActionParameter, ActionLog
 from djangoplicity.actions.plugins import ActionPlugin
 from test_project.models import SimpleAction, SimpleError, SomeListTest, SomeEventAction
+from django.core.cache import cache
 
 from mock import patch
 
@@ -116,16 +117,31 @@ class ActionsTestCase(TestCase):
         self.assertEquals(Action._plugins, list_register)
             
     def test_run(self):
-            Action.objects.all().delete()
-            a=SimpleAction()
-            a.run('test')
-            print a.action_run_test
-            self.assertEquals(u'test', a.action_run_test)
+        Action.objects.all().delete()
+        a=SimpleAction()
+        a.run('test')
+        print a.action_run_test
+        self.assertEquals(u'test', a.action_run_test)
     
     def test_get_key(self):
         a = self.createNewAction()
         p = self.createNewActionParameter(a)
         l = self.createList()
-        Event = SomeEventAction( action=a, on_event='on_unsubscribe', model_object=l ).save()
-        print SomeEventAction._key
-        print SomeEventAction._get_key()
+        SomeEventAction( action=a, on_event='on_unsubscribe', model_object=l ).save()
+        self.assertEquals(SomeEventAction._get_key(), u'djangoplicity.mailinglists.action_cache')
+    
+    def test_delete_cache(self):
+        a = self.createNewAction()
+        p = self.createNewActionParameter(a)
+        l = self.createList()
+        SomeEventAction( action=a, on_event='on_unsubscribe', model_object=l ).save()
+        SomeEventAction.clear_cache()
+        self.assertIsNone(cache.get( SomeEventAction._key ))
+    
+    def test_create_get_cache(self):
+        a = self.createNewAction()
+        p = self.createNewActionParameter(a)
+        l = self.createList()
+        SomeEventAction( action=a, on_event='on_unsubscribe', model_object=l ).save()
+        self.assertEquals(SomeEventAction.create_cache(), SomeEventAction.get_cache())
+
