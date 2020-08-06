@@ -120,7 +120,6 @@ class ActionsTestCase(TestCase):
         Action.objects.all().delete()
         a=SimpleAction()
         a.run('test')
-        print a.action_run_test
         self.assertEquals(u'test', a.action_run_test)
     
     def test_get_key(self):
@@ -165,9 +164,8 @@ class ActionsTestCase(TestCase):
             l.primary_key_field = tag_objid
             l.save()
             SomeEventAction( action=a, on_event='on_unsubscribe', model_object=l ).save()
-            print SomeEventAction.get_actions_for_event(on_event='on_unsubscribe')
             action_cache = SomeEventAction.get_cache()
             actions = action_cache[ 'on_unsubscribe' ]
-            self.assertEquals(SomeEventAction.get_actions(on_event='on_unsubscribe'), actions)
+            self.assertEquals(SomeEventAction.get_actions_for_event(on_event='on_unsubscribe'), actions)
         
 
