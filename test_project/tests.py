@@ -153,6 +153,21 @@ class ActionsTestCase(TestCase):
         l.primary_key_field = tag_objid
         l.save()
         SomeEventAction( action=a, on_event='on_unsubscribe', model_object=l ).save()
-        print SomeEventAction.get_actions(l.pk)
-        # self.assertEquals(SomeEventAction.get_actions(l.pk, on_event='on_unsubscribe'), )
+        action_cache = SomeEventAction.get_cache()
+        actions = action_cache[ str( l.pk ) ]
+        self.assertEquals(SomeEventAction.get_actions(l.pk), actions)
+    
+    def test_get_actions_for_event(self):
+            a = self.createNewAction()
+            p = self.createNewActionParameter(a)
+            l = self.createList()
+            (tag_objid,created) = SomeMergeTest.objects.get_or_create( list=l, name='Object ID' )
+            l.primary_key_field = tag_objid
+            l.save()
+            SomeEventAction( action=a, on_event='on_unsubscribe', model_object=l ).save()
+            print SomeEventAction.get_actions_for_event(on_event='on_unsubscribe')
+            action_cache = SomeEventAction.get_cache()
+            actions = action_cache[ 'on_unsubscribe' ]
+            self.assertEquals(SomeEventAction.get_actions(on_event='on_unsubscribe'), actions)
+        
 
