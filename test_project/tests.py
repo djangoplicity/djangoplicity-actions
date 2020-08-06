@@ -4,7 +4,7 @@ from __future__ import unicode_literals
 from django.test import TestCase, TransactionTestCase
 from djangoplicity.actions.models import Action, ActionParameter, ActionLog
 from djangoplicity.actions.plugins import ActionPlugin
-from test_project.models import SimpleAction, SimpleError
+from test_project.models import SimpleAction, SimpleError, SomeListTest, SomeEventAction
 
 from mock import patch
 
@@ -25,6 +25,12 @@ class ActionsTestCase(TestCase):
         p = ActionParameter.objects.create(action=action ,name='test', value='value test')
         p.save()
         return p
+
+    # to test EventActions
+    def createList(self):
+        l,created = SomeListTest.objects.get_or_create( api_key='INVALID', list_id='INVALID', web_id='INVALID', connected=True )
+        l.save()
+        return l
 
     # add new action, register it and get choices list for this action
     def test_list_choices(self):
@@ -115,3 +121,11 @@ class ActionsTestCase(TestCase):
             a.run('test')
             print a.action_run_test
             self.assertEquals(u'test', a.action_run_test)
+    
+    def test_get_key(self):
+        a = self.createNewAction()
+        p = self.createNewActionParameter(a)
+        l = self.createList()
+        Event = SomeEventAction( action=a, on_event='on_unsubscribe', model_object=l ).save()
+        print SomeEventAction._key
+        print SomeEventAction._get_key()

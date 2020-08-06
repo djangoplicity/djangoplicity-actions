@@ -36,7 +36,7 @@ INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
-    'django.contrib.sites',
+    # 'django.contrib.sites',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
@@ -142,9 +142,9 @@ STATIC_URL = '/static/'
 
 
 # CELERY
-CELERY_IMPORTS = [
-    "djangoplicity.actions.tasks",
-]
+# CELERY_IMPORTS = [
+#     "djangoplicity.actions.tasks",
+# ]
 # Task result backend
 CELERY_RESULT_BACKEND = "amqp"
 CELERY_BROKER_URL = 'amqp://guest:guest@broker:5672/'
