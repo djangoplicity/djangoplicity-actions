@@ -34,6 +34,14 @@ class SomeEventAction(EventAction):
     def _get_key( cls ):
         return cls._key
 
+class SomeMergeTest(models.Model):
+    '''
+    Store information about mailchimp mergefields for each list.
+    Merge vars are now named Merge fields, but the class name was kept
+    '''
+    list = models.ForeignKey(SomeListTest)
+    name = models.CharField(max_length=255)
+
 
 class SimpleAction( ActionPlugin ):
     action_name = 'Simple action'

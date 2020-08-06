@@ -4,7 +4,7 @@ from __future__ import unicode_literals
 from django.test import TestCase, TransactionTestCase
 from djangoplicity.actions.models import Action, ActionParameter, ActionLog
 from djangoplicity.actions.plugins import ActionPlugin
-from test_project.models import SimpleAction, SimpleError, SomeListTest, SomeEventAction
+from test_project.models import SimpleAction, SimpleError, SomeListTest, SomeEventAction, SomeMergeTest
 from django.core.cache import cache
 
 from mock import patch
@@ -144,4 +144,15 @@ class ActionsTestCase(TestCase):
         l = self.createList()
         SomeEventAction( action=a, on_event='on_unsubscribe', model_object=l ).save()
         self.assertEquals(SomeEventAction.create_cache(), SomeEventAction.get_cache())
+
+    def test_get_actions(self):
+        a = self.createNewAction()
+        p = self.createNewActionParameter(a)
+        l = self.createList()
+        (tag_objid,created) = SomeMergeTest.objects.get_or_create( list=l, name='Object ID' )
+        l.primary_key_field = tag_objid
+        l.save()
+        SomeEventAction( action=a, on_event='on_unsubscribe', model_object=l ).save()
+        print SomeEventAction.get_actions(l.pk)
+        # self.assertEquals(SomeEventAction.get_actions(l.pk, on_event='on_unsubscribe'), )
 
