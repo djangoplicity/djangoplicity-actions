@@ -38,7 +38,6 @@ class ActionsTestCase(TestCase):
         a = self.createNewAction()
         list_choices = a.get_plugin_choices()
         self.assertEquals(list_choices, [(SimpleAction.get_class_path(), SimpleAction.action_name)] )
-        # self.assertIsNone(None)
     
     # get plugin class registered
     def test_get_class_registered(self):
@@ -168,4 +167,3 @@ class ActionsTestCase(TestCase):
             actions = action_cache[ 'on_unsubscribe' ]
             self.assertEquals(SomeEventAction.get_actions_for_event(on_event='on_unsubscribe'), actions)
         
-
