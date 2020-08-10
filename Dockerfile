@@ -1,8 +1,8 @@
-FROM python:2.7-slim-buster
+FROM python:3.8
 
 ENV PYTHONUNBUFFERED 1
 
-RUN apt-get update && apt-get install -y \
+RUN apt-get update && apt-get install -y && apt install postgresql-server-dev-all \
     gcc \
     git \
     libldap2-dev \

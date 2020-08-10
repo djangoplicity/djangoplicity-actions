@@ -25,7 +25,7 @@ services:
 
   web:
     <<: *common
-    container_name: djangoplicity-actions-web
+    container_name: djangoplicity-actions-web-3
     command: ['./scripts/command-dev.sh']
     ports:
       - "8001:8000"
