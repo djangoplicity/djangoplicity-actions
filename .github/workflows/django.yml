@@ -36,8 +36,8 @@ jobs:
         run: sudo apt-get install python-dev libpq-dev
       - name: Install dependencies
         run: |
-          python3 -m pip3.8 install --upgrade pip
-          pip3 install -r requirements.txt --find-links https://www.djangoplicity.org/repository/packages/
+          apt install python3-pip
+          pip3 install -r requirements.txt 
       - name: Run migrations
         run: python manage.py migrate
       - name: Run tests
