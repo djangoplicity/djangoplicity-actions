@@ -4,7 +4,8 @@ from __future__ import unicode_literals
 from django.test import TestCase, TransactionTestCase
 from djangoplicity.actions.models import Action, ActionParameter, ActionLog
 from djangoplicity.actions.plugins import ActionPlugin
-from test_project.models import SimpleAction, SimpleError
+from test_project.models import SimpleAction, SimpleError, SomeListTest, SomeEventAction, SomeMergeTest
+from django.core.cache import cache
 
 from mock import patch
 
@@ -26,12 +27,17 @@ class ActionsTestCase(TestCase):
         p.save()
         return p
 
+    # to test EventActions
+    def createList(self):
+        l,created = SomeListTest.objects.get_or_create( api_key='INVALID', list_id='INVALID', web_id='INVALID', connected=True )
+        l.save()
+        return l
+
     # add new action, register it and get choices list for this action
     def test_list_choices(self):
         a = self.createNewAction()
         list_choices = a.get_plugin_choices()
         self.assertEquals(list_choices, [(SimpleAction.get_class_path(), SimpleAction.action_name)] )
-        # self.assertIsNone(None)
     
     # get plugin class registered
     def test_get_class_registered(self):
@@ -110,14 +116,54 @@ class ActionsTestCase(TestCase):
         self.assertEquals(Action._plugins, list_register)
             
     def test_run(self):
-            Action.objects.all().delete()
-            a=SimpleAction()
-            a.run('test')
-            print a.action_run_test
-            self.assertEquals(u'test', a.action_run_test)
+        Action.objects.all().delete()
+        a=SimpleAction()
+        a.run('test')
+        self.assertEquals(u'test', a.action_run_test)
     
-    # # @patch('djangoplicity.actions.tasks.hello')
-    # def test_task(self):
-    #     with patch('test_project.tests.ActionsTestCase.test_task') as mock_task:
-    #         hello.delay()
-    #         self.assertTrue(mock_task.called)
+    def test_get_key(self):
+        a = self.createNewAction()
+        p = self.createNewActionParameter(a)
+        l = self.createList()
+        SomeEventAction( action=a, on_event='on_unsubscribe', model_object=l ).save()
+        self.assertEquals(SomeEventAction._get_key(), u'djangoplicity.mailinglists.action_cache')
+    
+    def test_delete_cache(self):
+        a = self.createNewAction()
+        p = self.createNewActionParameter(a)
+        l = self.createList()
+        SomeEventAction( action=a, on_event='on_unsubscribe', model_object=l ).save()
+        SomeEventAction.clear_cache()
+        self.assertIsNone(cache.get( SomeEventAction._key ))
+    
+    def test_create_get_cache(self):
+        a = self.createNewAction()
+        p = self.createNewActionParameter(a)
+        l = self.createList()
+        SomeEventAction( action=a, on_event='on_unsubscribe', model_object=l ).save()
+        self.assertEquals(SomeEventAction.create_cache(), SomeEventAction.get_cache())
+
+    def test_get_actions(self):
+        a = self.createNewAction()
+        p = self.createNewActionParameter(a)
+        l = self.createList()
+        (tag_objid,created) = SomeMergeTest.objects.get_or_create( list=l, name='Object ID' )
+        l.primary_key_field = tag_objid
+        l.save()
+        SomeEventAction( action=a, on_event='on_unsubscribe', model_object=l ).save()
+        action_cache = SomeEventAction.get_cache()
+        actions = action_cache[ str( l.pk ) ]
+        self.assertEquals(SomeEventAction.get_actions(l.pk), actions)
+    
+    def test_get_actions_for_event(self):
+            a = self.createNewAction()
+            p = self.createNewActionParameter(a)
+            l = self.createList()
+            (tag_objid,created) = SomeMergeTest.objects.get_or_create( list=l, name='Object ID' )
+            l.primary_key_field = tag_objid
+            l.save()
+            SomeEventAction( action=a, on_event='on_unsubscribe', model_object=l ).save()
+            action_cache = SomeEventAction.get_cache()
+            actions = action_cache[ 'on_unsubscribe' ]
+            self.assertEquals(SomeEventAction.get_actions_for_event(on_event='on_unsubscribe'), actions)
+        
