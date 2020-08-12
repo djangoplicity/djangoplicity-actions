@@ -36,7 +36,8 @@ jobs:
         run: sudo apt-get install python-dev libpq-dev
       - name: Install dependencies
         run: |
-          apt install python3-pip
+          apt-get install python3-pip
+          apt-get update
           pip3 install -r requirements.txt 
       - name: Run migrations
         run: python manage.py migrate
