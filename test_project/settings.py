@@ -144,9 +144,9 @@ STATIC_URL = '/static/'
 
 
 # CELERY
-CELERY_IMPORTS = [
-    "djangoplicity.actions.tasks",
-]
+# CELERY_IMPORTS = [
+#     "djangoplicity.actions.tasks",
+# ]
 # Task result backend
 CELERY_RESULT_BACKEND = "amqp"
 CELERY_BROKER_URL = 'amqp://guest:guest@broker:5672/'

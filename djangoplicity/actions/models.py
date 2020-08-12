@@ -201,7 +201,7 @@ class ActionLog( models.Model ):
 
 
 class EventAction( models.Model ):
-    action = models.ForeignKey( Action, on_delete=models.CASCADE )
+    action = models.ForeignKey( Action, on_delete=models.CASCADE)
     on_event = models.CharField( max_length=50, choices=[], db_index=True )
 
     @classmethod
