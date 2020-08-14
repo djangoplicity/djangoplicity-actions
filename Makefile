@@ -5,10 +5,10 @@ test:
 	docker exec -it djangoplicity-actions-web-3 coverage run --source='.' manage.py test
 
 makemigrations:
-	docker exec -it djangoplicity-actions-web python manage.py makemigrations test_project
+	docker exec -it djangoplicity-actions-web-3 python manage.py makemigrations test_project
 
 migrate:
-	docker exec -it djangoplicity-actions-web python manage.py migrate test_project
+	docker exec -it djangoplicity-actions-web-3 python manage.py migrate test_project
 
 coverage-html:
 	docker exec -it djangoplicity-actions-web-3 coverage html

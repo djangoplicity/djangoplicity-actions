@@ -27,7 +27,7 @@ class SomeEventAction(EventAction):
         super(SomeEventAction, self).__init__(*args, **kwargs)
         self._meta.get_field('on_event')._choices = ACTION_EVENTS
 
-    model_object = models.ForeignKey(SomeListTest)
+    model_object = models.ForeignKey(SomeListTest, on_delete=models.CASCADE)
 
     _key = 'djangoplicity.mailinglists.action_cache'
 
@@ -40,7 +40,7 @@ class SomeMergeTest(models.Model):
     Store information about mailchimp mergefields for each list.
     Merge vars are now named Merge fields, but the class name was kept
     '''
-    list = models.ForeignKey(SomeListTest)
+    list = models.ForeignKey(SomeListTest, on_delete=models.CASCADE)
     name = models.CharField(max_length=255)
 
 
