@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
+from builtins import str
 from django.test import TestCase, TransactionTestCase
 from djangoplicity.actions.models import Action, ActionParameter, ActionLog
 from djangoplicity.actions.plugins import ActionPlugin
