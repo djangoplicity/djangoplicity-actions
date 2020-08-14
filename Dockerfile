@@ -1,4 +1,4 @@
-FROM python:2.7-slim-buster
+FROM python:3.8
 
 ENV PYTHONUNBUFFERED 1
 
@@ -16,7 +16,7 @@ WORKDIR /app
 COPY requirements/ requirements/
 COPY requirements.txt .
 
-RUN pip install -r requirements.txt --find-links https://www.djangoplicity.org/repository/packages/
+RUN pip3 install -r requirements.txt
 # Create app required directories
 RUN mkdir -p tmp
 
