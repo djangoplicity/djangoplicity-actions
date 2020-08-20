@@ -146,8 +146,8 @@ STATIC_URL = '/static/'
 #     "djangoplicity.actions.tasks",
 # ]
 # Task result backend
-CELERY_RESULT_BACKEND = "amqp"
-CELERY_BROKER_URL = 'amqp://guest:guest@broker:5672/'
+# CELERY_RESULT_BACKEND = "amqp"
+# CELERY_BROKER_URL = 'amqp://guest:guest@broker:5672/'
 # Avoid infinite wait times and retries
 # CELERY_BROKER_TRANSPORT_OPTIONS = {
 #     'max_retries': 3,

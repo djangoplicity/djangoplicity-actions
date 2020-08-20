@@ -16,8 +16,9 @@ WORKDIR /app
 COPY requirements/ requirements/
 COPY requirements.txt .
 
-RUN python -m pip install --upgrade pip
-RUN pip install -r requirements.txt
+# RUN python -m pip install --upgrade pip
+# RUN pip install -r requirements.txt
+RUN pip3 install -r requirements.txt
 # Create app required directories
 RUN mkdir -p tmp
 
