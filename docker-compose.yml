@@ -32,20 +32,6 @@ services:
     depends_on:
       - db
   
-  broker:
-    image: rabbitmq:3.8.3
-    container_name: djangoplicity-actions-broker
-    environment: 
-      RABBITMQ_DEFAULT_USER: guest
-      RABBITMQ_DEFAULT_PASS: guest
-  
-  celery:
-    <<: *common
-    container_name: djangoplicity-actions-celery
-    command: ["celery", "-B", "--app=test_project", "--hostname=worker1@%h", "--loglevel=INFO", "--queues=celery", "worker"]
-    depends_on:
-      - broker
-      - web
       
 volumes:
   pgdata:

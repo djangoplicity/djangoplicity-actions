@@ -139,24 +139,3 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/1.11/howto/static-files/
 
 STATIC_URL = '/static/'
-
-
-# CELERY
-# CELERY_IMPORTS = [
-#     "djangoplicity.actions.tasks",
-# ]
-# Task result backend
-CELERY_RESULT_BACKEND = "amqp"
-CELERY_BROKER_URL = 'amqp://guest:guest@broker:5672/'
-# Avoid infinite wait times and retries
-# CELERY_BROKER_TRANSPORT_OPTIONS = {
-#     'max_retries': 3,
-#     'interval_start': 0,
-#     'interval_step': 0.2,
-#     'interval_max': 0.2,
-# }
-# # AMQP backend settings - Required for flower to work as intended
-# CELERY_RESULT_SERIALIZER = "json"
-# CELERY_RESULT_EXPIRES = 3600
-# # File to save revoked tasks across workers restart
-# CELERY_WORKER_STATE_DB = os.path.join(TMP_DIR, 'celery_states')

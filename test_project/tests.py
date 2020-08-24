@@ -8,8 +8,6 @@ from djangoplicity.actions.plugins import ActionPlugin
 from test_project.models import SimpleAction, SimpleError, SomeListTest, SomeEventAction, SomeMergeTest
 from django.core.cache import cache
 
-from mock import patch
-
 import traceback
 
 # Create your tests here.
