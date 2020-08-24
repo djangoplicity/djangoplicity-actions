@@ -16,7 +16,7 @@ WORKDIR /app
 COPY requirements/ requirements/
 COPY requirements.txt .
 
-RUN pip install -r requirements.txt --find-links https://www.djangoplicity.org/repository/packages/
+RUN pip install -r requirements.txt
 # Create app required directories
 RUN mkdir -p tmp
 
