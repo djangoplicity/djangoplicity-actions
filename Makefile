@@ -24,4 +24,7 @@ futurize-stage2:
 	docker exec -it djangoplicity-actions-web futurize --stage2 --nofix=newstyle -w -n .
 
 test-python37:
-	docker exec -it djangoplicity-actions-web tox -e py37-django22
+	docker exec -it djangoplicity-actions-web tox -e py37
+
+test-python38:
+	docker exec -it djangoplicity-actions-web tox -e py38
