@@ -16,9 +16,3 @@ coverage-html:
 
 test-python27:
 	docker exec -it djangoplicity-actions-web tox -e py27-django111
-
-futurize-stage1:
-	docker exec -it djangoplicity-actions-web futurize --stage1 -w -n .
-
-futurize-stage2:
-	docker exec -it djangoplicity-actions-web futurize --stage2 -w -n .

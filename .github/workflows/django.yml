@@ -2,9 +2,9 @@ name: Djangoplicity Actions CI
 
 on:
   push:
-    branches: [ master, develop, release/* ]
+    branches: [ master, develop ]
   pull_request:
-    branches: [ master, develop, release/* ]
+    branches: [ master, develop ]
 
 jobs:
   build:
