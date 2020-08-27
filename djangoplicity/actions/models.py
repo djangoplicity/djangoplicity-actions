@@ -34,6 +34,7 @@
 Djangoplicity Actions
 """
 
+from builtins import str
 import logging
 
 from django.core.cache import cache
@@ -103,7 +104,7 @@ class Action( models.Model ):
         """
         Get list of action plug-in choices
         """
-        choices = [ ( p, pcls.action_name ) for p, pcls in cls._plugins.items() ]
+        choices = [ ( p, pcls.action_name ) for p, pcls in list(cls._plugins.items()) ]
         choices.sort( key=lambda x: x[1] )
         return list( choices )
 
@@ -137,7 +138,7 @@ class Action( models.Model ):
                     pass
 
             # Delete unknown parameters
-            for param in known_params.values():
+            for param in list(known_params.values()):
                 param.delete()
 
     def __unicode__( self ):

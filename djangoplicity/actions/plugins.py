@@ -34,6 +34,7 @@
 Djangoplicity Actions
 """
 
+from builtins import str
 import logging
 
 from celery.task import Task
@@ -81,9 +82,9 @@ class ActionPlugin( Task ):
             success=False,
             plugin=self.get_class_path(),
             name=self.action_name,
-            parameters=';'.join( [ "%s = %s" % ( unicode( k ), unicode( v ) ) for k, v in args[0].items() ] ),
-            args='; '.join( [unicode( x ) for x in args[1:]] ),
-            kwargs=';'.join( [ "%s = %s" % ( unicode( k ), unicode( v ) ) for k, v in kwargs.items() ] ),
+            parameters=';'.join( [ "%s = %s" % ( str( k ), str( v ) ) for k, v in list(args[0].items()) ] ),
+            args='; '.join( [str( x ) for x in args[1:]] ),
+            kwargs=';'.join( [ "%s = %s" % ( str( k ), str( v ) ) for k, v in list(kwargs.items()) ] ),
             error=einfo.traceback,
         ).save()
 
@@ -96,9 +97,9 @@ class ActionPlugin( Task ):
             success=True,
             plugin=self.get_class_path(),
             name=self.action_name,
-            parameters=';'.join( [ "%s = %s" % ( unicode( k ), unicode( v ) ) for k, v in args[0].items() ] ),
-            args='; '.join( [unicode( x ) for x in args[1:]] ),
-            kwargs=';'.join( [ "%s = %s" % ( unicode( k ), unicode( v ) ) for k, v in kwargs.items() ] ),
+            parameters=';'.join( [ "%s = %s" % ( str( k ), str( v ) ) for k, v in list(args[0].items()) ] ),
+            args='; '.join( [str( x ) for x in args[1:]] ),
+            kwargs=';'.join( [ "%s = %s" % ( str( k ), str( v ) ) for k, v in list(kwargs.items()) ] ),
         ).save()
 
     @classmethod
