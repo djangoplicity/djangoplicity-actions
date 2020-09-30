@@ -40,12 +40,14 @@ import logging
 from django.core.cache import cache
 from django.db import models
 from django.db.models.signals import post_save
+from django.utils.encoding import python_2_unicode_compatible
 
 from djangoplicity.actions.plugins import ActionPlugin
 
 logger = logging.getLogger( 'djangoplicity' )
 
 
+@python_2_unicode_compatible
 class Action( models.Model ):
     """
     Model for defining actions ( plugin + configuration )
@@ -141,13 +143,14 @@ class Action( models.Model ):
             for param in list(known_params.values()):
                 param.delete()
 
-    def __unicode__( self ):
+    def __str__( self ):
         return "%s: %s" % ( self.get_plugincls().name, self.name )
 
     class Meta:
         ordering = ['name']
 
 
+@python_2_unicode_compatible
 class ActionParameter( models.Model ):
     """
     Parameter for an action
@@ -174,7 +177,7 @@ class ActionParameter( models.Model ):
         elif self.type == 'date':
             return self.value
 
-    def __unicode__( self ):
+    def __str__( self ):
         return u"%s = %s (%s)" % ( self.name, self.value, self.type )
 
     class Meta:
