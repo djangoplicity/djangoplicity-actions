@@ -40,6 +40,7 @@ import logging
 from django.core.cache import cache
 from django.db import models
 from django.db.models.signals import post_save
+import django.db.models.deletion
 
 from djangoplicity.actions.plugins import ActionPlugin
 
@@ -152,7 +153,7 @@ class ActionParameter( models.Model ):
     """
     Parameter for an action
     """
-    action = models.ForeignKey( Action, on_delete=models.CASCADE )
+    action = models.ForeignKey( Action, on_delete=django.db.models.deletion.CASCADE )
     name = models.SlugField( max_length=255, unique=False )
     value = models.CharField( max_length=255, blank=True, default='' )
     type = models.CharField( max_length=4, default='str', choices=[ ( 'str', 'Text' ), ( 'int', 'Integer' ), ( 'bool', 'Boolean' ), ( 'date', 'Date' ), ] )
@@ -200,7 +201,7 @@ class ActionLog( models.Model ):
 
 
 class EventAction( models.Model ):
-    action = models.ForeignKey( Action, on_delete=models.CASCADE )
+    action = models.ForeignKey( Action, on_delete=django.db.models.deletion.CASCADE )
     on_event = models.CharField( max_length=50, choices=[], db_index=True )
 
     @classmethod

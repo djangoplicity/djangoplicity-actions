@@ -1,6 +1,7 @@
 from django.db import models
 from djangoplicity.actions.models import EventAction
 from djangoplicity.actions.plugins import ActionPlugin
+import django.db.models.deletion
 
 
 class SomeListTest(models.Model):
@@ -26,7 +27,7 @@ class SomeEventAction(EventAction):
         super(SomeEventAction, self).__init__(*args, **kwargs)
         self._meta.get_field('on_event')._choices = ACTION_EVENTS
 
-    model_object = models.ForeignKey(SomeListTest, on_delete=models.CASCADE)
+    model_object = models.ForeignKey(SomeListTest, on_delete=django.db.models.deletion.CASCADE)
 
     _key = 'djangoplicity.mailinglists.action_cache'
 
@@ -39,7 +40,7 @@ class SomeMergeTest(models.Model):
     Store information about mailchimp mergefields for each list.
     Merge vars are now named Merge fields, but the class name was kept
     '''
-    list = models.ForeignKey(SomeListTest, on_delete=models.CASCADE)
+    list = models.ForeignKey(SomeListTest, on_delete=django.db.models.deletion.CASCADE)
     name = models.CharField(max_length=255)
 
 
