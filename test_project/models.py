@@ -26,7 +26,7 @@ class SomeEventAction(EventAction):
         super(SomeEventAction, self).__init__(*args, **kwargs)
         self._meta.get_field('on_event')._choices = ACTION_EVENTS
 
-    model_object = models.ForeignKey(SomeListTest)
+    model_object = models.ForeignKey(SomeListTest, on_delete=django.db.models.deletion.CASCADE)
 
     _key = 'djangoplicity.mailinglists.action_cache'
 
