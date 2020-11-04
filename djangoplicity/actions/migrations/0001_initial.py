@@ -2,6 +2,7 @@
 from __future__ import unicode_literals
 
 from django.db import models, migrations
+import django.db.models.deletion
 
 
 class Migration(migrations.Migration):
@@ -48,7 +49,7 @@ class Migration(migrations.Migration):
                 ('value', models.CharField(default=b'', max_length=255, blank=True)),
                 ('type', models.CharField(default=b'str', max_length=4, choices=[(b'str', b'Text'), (b'int', b'Integer'), (b'bool', b'Boolean'), (b'date', b'Date')])),
                 ('help_text', models.CharField(max_length=255, blank=True)),
-                ('action', models.ForeignKey(to='actions.Action')),
+                ('action', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='actions.Action')),
             ],
             options={
                 'ordering': ['action', 'name'],
