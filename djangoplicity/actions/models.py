@@ -152,7 +152,7 @@ class ActionParameter( models.Model ):
     """
     Parameter for an action
     """
-    action = models.ForeignKey( Action )
+    action = models.ForeignKey(Action, on_delete=models.CASCADE)
     name = models.SlugField( max_length=255, unique=False )
     value = models.CharField( max_length=255, blank=True, default='' )
     type = models.CharField( max_length=4, default='str', choices=[ ( 'str', 'Text' ), ( 'int', 'Integer' ), ( 'bool', 'Boolean' ), ( 'date', 'Date' ), ] )
@@ -200,7 +200,7 @@ class ActionLog( models.Model ):
 
 
 class EventAction( models.Model ):
-    action = models.ForeignKey( Action )
+    action = models.ForeignKey(Action, on_delete=models.CASCADE)
     on_event = models.CharField( max_length=50, choices=[], db_index=True )
 
     @classmethod
