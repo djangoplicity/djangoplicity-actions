@@ -32,6 +32,7 @@
 
 from django.contrib import admin
 from djangoplicity.actions.models import Action, ActionParameter, ActionLog
+from django import forms
 
 
 class ActionParameterInlineAdmin( admin.TabularInline ):
@@ -43,11 +44,22 @@ class ActionParameterInlineAdmin( admin.TabularInline ):
     fields = ['name', 'value', 'type', 'help_text', ]
 
 
+class ActionAdminForm(forms.ModelForm):
+    class Meta:
+        model = Action
+        fields = '__all__'
+
+    def __init__(self, *args, **kwargs):
+        super(ActionAdminForm, self).__init__(*args, **kwargs)
+        self.fields['plugin'] = forms.ChoiceField(choices=Action.get_plugin_choices())
+
+
 class ActionAdmin( admin.ModelAdmin ):
     list_display = [ 'name', 'plugin' ]
     list_filter = ['plugin']
     search_fields = [ 'name', 'plugin', ]
     inlines = [ ActionParameterInlineAdmin ]
+    form = ActionAdminForm
 
 
 class ActionLogAdmin( admin.ModelAdmin ):

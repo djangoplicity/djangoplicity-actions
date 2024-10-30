@@ -57,12 +57,10 @@ class Action( models.Model ):
     plugin = models.CharField( max_length=255, choices=[] )
     name = models.CharField( max_length=255 )
 
-    def __init__( self, *args, **kwargs ):
-        """
-        Set choices for plugin field dynamically based on registered plugins.
-        """
-        super( Action, self ).__init__( *args, **kwargs )
-        self._meta.get_field( 'plugin' )._choices = Action.get_plugin_choices()
+    def clean_fields(self, exclude=None):
+        # We exclude the plugin field validation because we add the choices dynamically, otherwise admin would disallow any option
+        exclude = ['plugin']
+        super().clean_fields(exclude=exclude)
 
     def get_plugincls( self ):
         """
@@ -106,7 +104,7 @@ class Action( models.Model ):
         """
         Get list of action plug-in choices
         """
-        choices = [ ( p, pcls.action_name ) for p, pcls in list(cls._plugins.items()) ]
+        choices = [ ( p, pcls.action_name + ' (' + str(p) + ')' ) for p, pcls in list(cls._plugins.items()) ]
         choices.sort( key=lambda x: x[1] )
         return list( choices )
 
